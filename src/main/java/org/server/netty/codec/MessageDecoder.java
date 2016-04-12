@@ -31,7 +31,7 @@ public class MessageDecoder extends ByteToMessageDecoder {
 		if (!buff.isReadable()) {
 			return;
 		}
-		LOGGER.info(String.format("[%s]收到的的报文:[%s]", ctx.channel().id().asLongText(), ByteBufUtil.hexDump(buff)));
+		LOGGER.info(String.format("[%s]收到的的报文:[%s]", ctx.channel(), ByteBufUtil.hexDump(buff)));
 
 		byte[] ss = new byte[buff.readableBytes()];
 		buff.readBytes(ss);

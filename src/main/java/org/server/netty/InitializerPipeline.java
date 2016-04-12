@@ -13,6 +13,7 @@
 package org.server.netty;
 
 import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
@@ -22,22 +23,27 @@ import org.server.netty.codec.MessageEncoder;
 import org.server.netty.handler.CommonHandler;
 
 /**
- *装载Netty处理链路.
+ * 装载Netty处理链路.
+ * 
  * @author 刘源
  */
 
 public class InitializerPipeline extends ChannelInitializer<SocketChannel> {
+	
+	private static final DefaultEventExecutorGroup e1 = new DefaultEventExecutorGroup(16);
+
 	public InitializerPipeline() {
-   
+
 	}
 
 	@Override
 	protected void initChannel(SocketChannel ch) throws Exception {
-		//使用Netty实现的线程池
-        DefaultEventExecutorGroup e1=new DefaultEventExecutorGroup(16);
+		// 使用Netty实现的线程池
+
 		ChannelPipeline pipeline = ch.pipeline();
 		pipeline.addLast("decoder", new MessageDecoder());
-        pipeline.addLast("encoder", new MessageEncoder());
-		pipeline.addLast(e1,"handler", new CommonHandler());
+		pipeline.addLast("encoder", new MessageEncoder());
+		pipeline.addLast(new ChannelOutboundHandlerAdapter());
+		pipeline.addLast(e1, "handler", new CommonHandler());
 	}
 }

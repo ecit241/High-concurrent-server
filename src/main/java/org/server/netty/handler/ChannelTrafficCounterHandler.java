@@ -20,6 +20,6 @@ public class ChannelTrafficCounterHandler extends ChannelTrafficShapingHandler {
         long writeBytes = this.trafficCounter().cumulativeWrittenBytes();
 
         LOGGER.debug(String.format("[%s]========写入数据[%d] Bytes, 读取数据[%d] Bytes=======",
-                ctx.channel().id().asLongText(),writeBytes, trafficCounter().cumulativeReadBytes()));
+                ctx.channel(),writeBytes, trafficCounter().cumulativeReadBytes()));
     }
 }

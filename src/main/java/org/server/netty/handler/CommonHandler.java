@@ -1,7 +1,7 @@
 package org.server.netty.handler;
 
-import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.AttributeKey;
 
 import org.slf4j.Logger;
@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  * @author 刘源
  */
 
-public class CommonHandler extends ChannelHandlerAdapter {
+public class CommonHandler extends SimpleChannelInboundHandler<Object> {
 	/**
 	 * 日志组件.
 	 */
@@ -25,33 +25,34 @@ public class CommonHandler extends ChannelHandlerAdapter {
 
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
-		LOGGER.debug(String.format("[%s]========打开连接=======", ctx.channel().id().asLongText()));
+		LOGGER.debug(String.format("[%s]========打开连接=======", ctx.channel()));
 		ctx.channel().attr(AttributeKey.valueOf("haha")).set("1");
 	}
 
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-		LOGGER.debug(String.format("[%s]========关闭连接=======", ctx.channel().id().asLongText()));
+		LOGGER.debug(String.format("[%s]========关闭连接=======", ctx.channel()));
 		LOGGER.debug(ctx.channel().remoteAddress().toString());
 		LOGGER.debug(ctx.channel().attr(AttributeKey.valueOf("haha")).get().toString());
 	}
 
 	@Override
-	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-//		PublishMessageEntity entity = new PublishMessageEntity(ctx, msg);
-        byte[] aaa= {0x12,0x23};
-        byte[] bbb={0x23,0x34};
-        byte[] ccc={0x55,0x55};
-        ctx.write(msg);
-        ctx.write(aaa);
-        ctx.write(bbb);
-        ctx.writeAndFlush(ccc);
-        
+	public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
+		// PublishMessageEntity entity = new PublishMessageEntity(ctx, msg);
+		byte[] aaa = { 0x12, 0x23 };
+		byte[] bbb = { 0x23, 0x34 };
+		byte[] ccc = { 0x55, 0x55 };
+		ctx.write(msg);
+		ctx.write(aaa);
+		ctx.write(bbb);
+		ctx.writeAndFlush(ccc);
+
 	}
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-		LOGGER.error("[" + ctx.channel().id().asLongText() + "]" + "通讯异常:", cause);
+		LOGGER.error("[" + ctx.channel() + "]" + "通讯异常:", cause);
 		ctx.close();
 	}
+
 }

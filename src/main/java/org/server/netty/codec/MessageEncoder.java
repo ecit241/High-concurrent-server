@@ -39,7 +39,7 @@ public class MessageEncoder extends MessageToByteEncoder<Object> {
 	 */
 	@Override
 	protected void encode(ChannelHandlerContext ctx, Object msg, ByteBuf out)  {
-		LOGGER.info(String.format("[%s]发送出的报文:[%s]", ctx.channel().id().asLongText(), ByteBufUtil.hexDump((byte[]) msg)));
+		LOGGER.info(String.format("[%s]发送出的报文:[%s]", ctx.channel(), ByteBufUtil.hexDump((byte[]) msg)));
 		out.writeBytes((byte[]) msg);
 	}
 }
